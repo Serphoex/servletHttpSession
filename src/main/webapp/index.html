@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Log in</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; padding: 0 16px; }
+  nav { border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 20px; }
+  nav a { color: #000; margin-right: 6px; }
+  nav a.activo { font-weight: bold; text-decoration: none; }
+  .error { color: red; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="activo">Log in</a> |
+  <a href="Servlet2">Visit</a> |
+  <a href="Servlet3">Log out</a>
+</nav>
+
+<h2>Iniciar sesión</h2>
+
+<p id="mensaje"></p>
+
+<form id="formulario" action="Servlet1" method="post" novalidate>
+  Nombre: <input type="text" id="userName" name="userName" maxlength="40">
+  <input type="submit" value="Entrar">
+  <div class="error" id="err-userName"></div>
+</form>
+
+<script>
+
+  const MENSAJES = {
+    login: 'Debes iniciar sesión primero.',
+    bye: 'Sesión cerrada correctamente.'
+  };
+  const clave = new URLSearchParams(location.search).get('msg');
+  if (MENSAJES[clave]) {
+    document.getElementById('mensaje').textContent = MENSAJES[clave];
+  }
+
+  const REGEX_TEXTO = /^\p{L}{2,40}$/u;
+
+  function validarNombre() {
+    const v = document.getElementById('userName').value.trim();
+    let msg = '';
+    if (v === '') msg = 'El nombre es obligatorio.';
+    else if (!REGEX_TEXTO.test(v)) msg = 'Solo letras (sin espacios, números ni símbolos), entre 2 y 40 caracteres.';
+    document.getElementById('err-userName').textContent = msg;
+    return msg === '';
+  }
+
+  document.getElementById('formulario').addEventListener('submit', function (e) {
+    if (!validarNombre()) e.preventDefault();
+  });
+  document.getElementById('userName').addEventListener('blur', validarNombre);
+</script>
+
+</body>
+</html>
